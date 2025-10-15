@@ -13,9 +13,9 @@ API_HASH = getenv("API_HASH")
 # Get your token from @BotFather on Telegram.
 BOT_TOKEN = getenv("BOT_TOKEN")
 # -------------------------------------------------------
-OWNER_USERNAME = getenv("OWNER_USERNAME","ixasta")
+OWNER_USERNAME = getenv("OWNER_USERNAME","iamakki001")
 # --------------------------------------------------------
-BOT_USERNAME = getenv("BOT_USERNAME","Laibaamusicbot")
+BOT_USERNAME = getenv("BOT_USERNAME","odsmusicbot")
 # --------------------------------------------------------
 BOT_NAME = getenv("BOT_NAME")
 # ---------------------------------------------------------
@@ -27,10 +27,10 @@ MONGO_DB_URI = getenv("MONGO_DB_URI", None)
 DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 17000))
 
 # Chat id of a group for logging bot's activities
-LOGGER_ID = int(getenv("LOGGER_ID", -1002311049341))
+LOGGER_ID = int(getenv("LOGGER_ID", -1002311769574))
 
 # Get this value from @PURVI_HELP_BOT on Telegram by /id
-OWNER_ID = int(getenv("OWNER_ID", 7464690589))
+OWNER_ID = int(getenv("OWNER_ID", 5909658683))
 
 
 # make your bots privacy from telegra.ph and put your url here 
@@ -41,7 +41,9 @@ PRIVACY_LINK = getenv("PRIVACY_LINK", "https://graph.org/PRIVACY-FOR-TEAM-PURVI-
 HEROKU_APP_NAME = getenv("HEROKU_APP_NAME")
 # Get it from http://dashboard.heroku.com/account
 HEROKU_API_KEY = getenv("HEROKU_API_KEY")
-
+API_URL = getenv("API_URL", 'https://api.thequickearn.xyz') #youtube song url
+VIDEO_API_URL = getenv("VIDEO_API_URL", 'https://api.video.thequickearn.xyz')
+API_KEY = getenv("API_KEY", 'NxGBNexGenBots4e1026') # youtube song api key
 UPSTREAM_REPO = getenv(
     "UPSTREAM_REPO",
     "https://github.com/ixastamusicbot/ASTA_MUSIC",
