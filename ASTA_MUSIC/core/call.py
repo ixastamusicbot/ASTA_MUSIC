@@ -33,7 +33,7 @@ from ASTA_MUSIC.utils.database import (
 )
 from ASTA_MUSIC.utils.exceptions import AssistantErr
 from ASTA_MUSIC.utils.formatters import check_duration, seconds_to_min, speed_converter
-from ASTA_MUSIC.utils.inline.play import stream_markup, telegram_markup
+from ASTA_MUSIC.utils.inline.play import stream_markup
 from ASTA_MUSIC.utils.stream.autoclear import auto_clean
 from ASTA_MUSIC.utils.thumbnails import get_thumb
 from strings import get_string
