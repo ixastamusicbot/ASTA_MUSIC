@@ -5,43 +5,41 @@ from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from youtubesearchpython.__future__ import VideosSearch
 
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 import config
 from ASTA_MUSIC import app
 from ASTA_MUSIC.misc import _boot_
 from ASTA_MUSIC.plugins.sudo.sudoers import sudoers_list
-from ASTA_MUSIC.utils.database import get_served_chats, get_served_users, get_sudoers
-from ASTA_MUSIC.utils import bot_sys_stats
 from ASTA_MUSIC.utils.database import (
     add_served_chat,
     add_served_user,
     blacklisted_chats,
     get_lang,
+    get_served_chats,
+    get_served_users,
+    get_sudoers,
     is_banned_user,
     is_on_off,
 )
 from ASTA_MUSIC.utils.decorators.language import LanguageStart
 from ASTA_MUSIC.utils.formatters import get_readable_time
 from ASTA_MUSIC.utils.inline import help_pannel, private_panel, start_panel
-from config import BANNED_USERS
 from strings import get_string
 
-#--------------------------
+#--------------------------#
 
 NEXI_VID = [
-"https://telegra.ph/file/1a3c152717eb9d2e94dc2.mp4",
-"https://files.catbox.moe/ln00jb.mp4",
-"https://graph.org/file/83ebf52e8bbf138620de7.mp4",
-"https://files.catbox.moe/0fq20c.mp4",
-"https://graph.org/file/318eac81e3d4667edcb77.mp4",
-"https://graph.org/file/7c1aa59649fbf3ab422da.mp4",
-"https://files.catbox.moe/t0nepm.mp4",
-
+    "https://telegra.ph/file/1a3c152717eb9d2e94dc2.mp4",
+    "https://files.catbox.moe/ln00jb.mp4",
+    "https://graph.org/file/83ebf52e8bbf138620de7.mp4",
+    "https://files.catbox.moe/0fq20c.mp4",
+    "https://graph.org/file/318eac81e3d4667edcb77.mp4",
+    "https://graph.org/file/7c1aa59649fbf3ab422da.mp4",
+    "https://files.catbox.moe/t0nepm.mp4",
 ]
 
+#--------------------------#
 
-
-@app.on_message(filters.command(["start"]) & filters.private & ~BANNED_USERS)
+@app.on_message(filters.command(["start"]) & filters.private & ~config.BANNED_USERS)
 @LanguageStart
 async def start_pm(client, message: Message, _):
     await add_served_user(message.from_user.id)
@@ -54,6 +52,7 @@ async def start_pm(client, message: Message, _):
                 caption=_["help_1"].format(config.SUPPORT_CHAT),
                 reply_markup=keyboard,
             )
+
         if name[0:3] == "sud":
             await sudoers_list(client=client, message=message, _=_)
             if await is_on_off(2):
@@ -62,6 +61,7 @@ async def start_pm(client, message: Message, _):
                     text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>sᴜᴅᴏʟɪsᴛ</b>.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
                 )
             return
+
         if name[0:3] == "inf":
             m = await message.reply_text("🔎")
             query = (str(name)).replace("info_", "", 1)
@@ -97,23 +97,44 @@ async def start_pm(client, message: Message, _):
             if await is_on_off(2):
                 return await app.send_message(
                     chat_id=config.LOGGER_ID,
-                    text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>ᴛʀᴀᴄᴋ ɪɴғᴏʀᴍᴀᴛɪᴏɴ</b>.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
+                    text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>ᴛʀᴀᴄᴋ ɪɴғᴏ</b>.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
                 )
     else:
+        # 🌸 Added animated start effect here
         out = private_panel(_)
+        baby = await message.reply_text("**__ᴅɪηɢ ᴅᴏηɢ.🥀__**")
+
+        for dots in [".", "..", "...", "....", "....."]:
+            await baby.edit_text(f"**__ᴅɪηɢ ᴅᴏηɢ{dots}🥀__**")
+            await asyncio.sleep(0.3)
+
+        for dots in [".", "..", "...", "....", "....."]:
+            await baby.edit_text(f"**__sᴛᴧʀᴛɪηɢ{dots}❤️‍🔥__**")
+            await asyncio.sleep(0.3)
+
+        for dots in [".", "..", "...", "....", "....."]:
+            await baby.edit_text(f"**__ʙσᴛ sᴛᴧʀᴛєᴅ{dots}💤__**")
+            await asyncio.sleep(0.3)
+
+        await baby.delete()
+
+        # Main start panel
         await message.reply_video(
             random.choice(NEXI_VID),
             caption=_["start_2"].format(message.from_user.mention, app.mention),
             reply_markup=InlineKeyboardMarkup(out),
         )
+
         if await is_on_off(2):
-            return await app.send_message(
+            await app.send_message(
                 chat_id=config.LOGGER_ID,
-                text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
+                text=f"{message.from_user.mention} sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ID:</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ:</b> @{message.from_user.username}",
             )
 
 
-@app.on_message(filters.command(["start"]) & filters.group & ~BANNED_USERS)
+#--------------------------#
+
+@app.on_message(filters.command(["start"]) & filters.group & ~config.BANNED_USERS)
 @LanguageStart
 async def start_gp(client, message: Message, _):
     out = start_panel(_)
@@ -123,8 +144,10 @@ async def start_gp(client, message: Message, _):
         caption=_["start_1"].format(app.mention, get_readable_time(uptime)),
         reply_markup=InlineKeyboardMarkup(out),
     )
-    return await add_served_chat(message.chat.id)
+    await add_served_chat(message.chat.id)
 
+
+#--------------------------#
 
 @app.on_message(filters.new_chat_members, group=-1)
 async def welcome(client, message: Message):
@@ -132,15 +155,18 @@ async def welcome(client, message: Message):
         try:
             language = await get_lang(message.chat.id)
             _ = get_string(language)
+
             if await is_banned_user(member.id):
                 try:
                     await message.chat.ban_member(member.id)
                 except:
                     pass
+
             if member.id == app.id:
                 if message.chat.type != ChatType.SUPERGROUP:
                     await message.reply_text(_["start_4"])
                     return await app.leave_chat(message.chat.id)
+
                 if message.chat.id in await blacklisted_chats():
                     await message.reply_text(
                         _["start_5"].format(
