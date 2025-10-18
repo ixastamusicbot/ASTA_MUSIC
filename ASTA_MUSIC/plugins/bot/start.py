@@ -1,63 +1,204 @@
-import asyncio
+import time
 import random
+import asyncio
 from pyrogram import filters
+from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from youtubesearchpython.__future__ import VideosSearch
+
+import config
 from ASTA_MUSIC import app
-from ASTA_MUSIC.utils import BOT_USERNAME
+from ASTA_MUSIC.misc import _boot_
+from ASTA_MUSIC.plugins.sudo.sudoers import sudoers_list
+from ASTA_MUSIC.utils.database import (
+    add_served_chat,
+    add_served_user,
+    blacklisted_chats,
+    get_lang,
+    get_served_chats,
+    get_served_users,
+    get_sudoers,
+    is_banned_user,
+    is_on_off,
+)
+from ASTA_MUSIC.utils.decorators.language import LanguageStart
+from ASTA_MUSIC.utils.formatters import get_readable_time
+from ASTA_MUSIC.utils.inline import help_pannel, private_panel, start_panel
+from strings import get_string
+from pyrogram.errors import MessageNotModified
 
-@app.on_message(filters.command(["start"]) & filters.private)
-async def start_private(client, message: Message):
-    baby = await message.reply_text("**__ᴅɪηɢ ᴅᴏηɢ🥀__**")
+#--------------------------#
 
-    # ⚡ Fast smooth animation
-    for dots in [".", "..", "..."]:
+NEXI_VID = [
+    "https://telegra.ph/file/1a3c152717eb9d2e94dc2.mp4",
+    "https://files.catbox.moe/ln00jb.mp4",
+    "https://graph.org/file/83ebf52e8bbf138620de7.mp4",
+    "https://files.catbox.moe/0fq20c.mp4",
+    "https://graph.org/file/318eac81e3d4667edcb77.mp4",
+    "https://graph.org/file/7c1aa59649fbf3ab422da.mp4",
+    "https://files.catbox.moe/t0nepm.mp4",
+]
+
+#--------------------------#
+
+@app.on_message(filters.command(["start"]) & filters.private & ~config.BANNED_USERS)
+@LanguageStart
+async def start_pm(client, message: Message, _):
+    await add_served_user(message.from_user.id)
+    if len(message.text.split()) > 1:
+        name = message.text.split(None, 1)[1]
+
+        if name[0:4] == "help":
+            keyboard = help_pannel(_)
+            return await message.reply_video(
+                random.choice(NEXI_VID),
+                caption=_["help_1"].format(config.SUPPORT_CHAT),
+                reply_markup=keyboard,
+            )
+
+        if name[0:3] == "sud":
+            await sudoers_list(client=client, message=message, _=_)
+            if await is_on_off(2):
+                return await app.send_message(
+                    chat_id=config.LOGGER_ID,
+                    text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛσ ᴄʜᴇᴄᴋ <b>sᴜᴅᴏʟɪsᴛ</b>.\n\n<b>ɪᴅ:</b> <code>{message.from_user.id}</code>",
+                )
+            return
+
+        if name[0:3] == "inf":
+            m = await message.reply_text("🔎")
+            query = (str(name)).replace("info_", "", 1)
+            query = f"https://www.youtube.com/watch?v={query}"
+            results = VideosSearch(query, limit=1)
+            for result in (await results.next())["result"]:
+                title = result["title"]
+                duration = result["duration"]
+                views = result["viewCount"]["short"]
+                thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+                channellink = result["channel"]["link"]
+                channel = result["channel"]["name"]
+                link = result["link"]
+                published = result["publishedTime"]
+            searched_text = _["start_6"].format(
+                title, duration, views, published, channellink, channel, app.mention
+            )
+            key = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(text=_["S_B_8"], url=link),
+                        InlineKeyboardButton(text=_["S_B_9"], url=config.SUPPORT_CHAT),
+                    ],
+                ]
+            )
+            await m.delete()
+            await app.send_photo(
+                chat_id=message.chat.id,
+                photo=thumbnail,
+                caption=searched_text,
+                reply_markup=key,
+            )
+            if await is_on_off(2):
+                return await app.send_message(
+                    chat_id=config.LOGGER_ID,
+                    text=f"{message.from_user.mention} ᴄʜᴇᴄᴋᴇᴅ <b>ᴛʀᴀᴄᴋ ɪɴғᴏ</b>.\n<b>ID:</b> <code>{message.from_user.id}</code>",
+                )
+    else:
+        out = private_panel(_)
+        baby = await message.reply_text("**__ᴅɪηɢ ᴅᴏηɢ🥀__**")
+
+        # ⚡ Fast & smooth DING DONG animation
+        for dots in [".", "..", "..."]:
+            try:
+                await baby.edit_text(f"**__ᴅɪηɢ ᴅᴏηɢ{dots}🥀__**")
+            except MessageNotModified:
+                pass
+            await asyncio.sleep(0.12)
+
+        for dots in [".", "..", "..."]:
+            try:
+                await baby.edit_text(f"**__sᴛᴧʀᴛɪηɢ{dots}❤️‍🔥__**")
+            except MessageNotModified:
+                pass
+            await asyncio.sleep(0.12)
+
+        for dots in [".", "..", "..."]:
+            try:
+                await baby.edit_text(f"**__ʙσᴛ sᴛᴧʀᴛєᴅ{dots}💤__**")
+            except MessageNotModified:
+                pass
+            await asyncio.sleep(0.12)
+
+        await baby.delete()
+
+        await message.reply_video(
+            random.choice(NEXI_VID),
+            caption=_["start_2"].format(message.from_user.mention, app.mention),
+            reply_markup=InlineKeyboardMarkup(out),
+        )
+
+        if await is_on_off(2):
+            await app.send_message(
+                chat_id=config.LOGGER_ID,
+                text=f"{message.from_user.mention} sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n<b>ID:</b> <code>{message.from_user.id}</code>",
+            )
+
+#--------------------------#
+
+@app.on_message(filters.command(["start"]) & filters.group & ~config.BANNED_USERS)
+@LanguageStart
+async def start_gp(client, message: Message, _):
+    out = start_panel(_)
+    uptime = int(time.time() - _boot_)
+    await message.reply_video(
+        random.choice(NEXI_VID),
+        caption=_["start_1"].format(app.mention, get_readable_time(uptime)),
+        reply_markup=InlineKeyboardMarkup(out),
+    )
+    await add_served_chat(message.chat.id)
+
+#--------------------------#
+
+@app.on_message(filters.new_chat_members, group=-1)
+async def welcome(client, message: Message):
+    for member in message.new_chat_members:
         try:
-            await baby.edit_text(f"**__ᴅɪηɢ ᴅᴏηɢ{dots}🥀__**")
-        except:
-            pass
-        await asyncio.sleep(0.15)
+            language = await get_lang(message.chat.id)
+            _ = get_string(language)
 
-    await baby.edit_text("**__sᴛᴧʀᴛɪηɢ❤️‍🔥__**")
-    await asyncio.sleep(0.4)
-    await baby.edit_text("**__ʙσᴛ sᴛᴧʀᴛєᴅ💤__**")
-    await asyncio.sleep(0.4)
+            if await is_banned_user(member.id):
+                try:
+                    await message.chat.ban_member(member.id)
+                except:
+                    pass
 
-    BUTTONS = [
-        [
-            InlineKeyboardButton("☞ 𝐆ʀσυρ ☜", url="https://t.me/oldskoolgc"),
-            InlineKeyboardButton("☞ 𝐒υρρσʀᴛ ☜", url="https://t.me/ixasta1"),
-        ],
-        [
-            InlineKeyboardButton("☞ 𝐀ᴅᴅ 𝐌ᴇ 𝐁ᴀʙʏ ☜", url=f"https://t.me/{BOT_USERNAME}?startgroup=true"),
-        ],
-    ]
+            if member.id == app.id:
+                if message.chat.type != ChatType.SUPERGROUP:
+                    await message.reply_text(_["start_4"])
+                    return await app.leave_chat(message.chat.id)
 
-    caption = (
-        "💫 **ʜєʏ ʙᴀʙʏ!**\n\n"
-        "ɪ'ϻ **ʟᴀɪʙᴀ ᴍυsɪᴄ ʙσᴛ 🎵**\n"
-        "ʀєᴀᴅʏ τσ ρʟᴀʏ sσηɢs ɪη γσυʀ ʜєᴀʀᴛ 💖\n\n"
-        "ʙσᴛ ϻᴀᴅє ʙʏ ⋏ 𝛅 𝛕 ⋏ ☞"
-    )
+                if message.chat.id in await blacklisted_chats():
+                    await message.reply_text(
+                        _["start_5"].format(
+                            app.mention,
+                            f"https://t.me/{app.username}?start=sudolist",
+                            config.SUPPORT_CHAT,
+                        ),
+                        disable_web_page_preview=True,
+                    )
+                    return await app.leave_chat(message.chat.id)
 
-    await baby.edit_text(caption, reply_markup=InlineKeyboardMarkup(BUTTONS))
-
-
-@app.on_message(filters.command(["start"]) & filters.group)
-async def start_group(client, message: Message):
-    await message.reply_text(
-        f"**ʜєʏ {message.from_user.mention} 🌸**\n\n"
-        f"ɪ'ϻ **ʟᴀɪʙᴀ ᴍυsɪᴄ ʙσᴛ 🎧**\n"
-        f"ʀєᴀᴅʏ τσ ρʟᴀʏ ϻυsɪᴄ ɪη τʜɪs ɢʀσυρ 💫\n\n"
-        f"ʙσᴛ ϻᴀᴅє ʙʏ ⋏ 𝛅 𝛕 ⋏ ☞",
-        reply_markup=InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("☞ 𝐆ʀσυρ ☜", url="https://t.me/oldskoolgc"),
-                    InlineKeyboardButton("☞ 𝐒υρρσʀᴛ ☜", url="https://t.me/ixasta1"),
-                ],
-                [
-                    InlineKeyboardButton("☞ 𝐀ᴅᴅ 𝐌ᴇ 𝐁ᴀʙʏ ☜", url=f"https://t.me/{BOT_USERNAME}?startgroup=true"),
-                ],
-            ]
-        ),
-    )
+                out = start_panel(_)
+                await message.reply_video(
+                    random.choice(NEXI_VID),
+                    caption=_["start_3"].format(
+                        message.from_user.mention,
+                        app.mention,
+                        message.chat.title,
+                        app.mention,
+                    ),
+                    reply_markup=InlineKeyboardMarkup(out),
+                )
+                await add_served_chat(message.chat.id)
+                await message.stop_propagation()
+        except Exception as ex:
+            print(ex)
