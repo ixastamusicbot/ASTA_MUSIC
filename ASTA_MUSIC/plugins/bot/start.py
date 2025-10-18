@@ -1,5 +1,6 @@
 import time
 import random
+import asyncio  # ✅ Added missing import
 from pyrogram import filters
 from pyrogram.enums import ChatType
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -24,6 +25,7 @@ from ASTA_MUSIC.utils.decorators.language import LanguageStart
 from ASTA_MUSIC.utils.formatters import get_readable_time
 from ASTA_MUSIC.utils.inline import help_pannel, private_panel, start_panel
 from strings import get_string
+from pyrogram.errors import MessageNotModified  # ✅ To handle harmless edit errors
 
 #--------------------------#
 
@@ -100,20 +102,29 @@ async def start_pm(client, message: Message, _):
                     text=f"{message.from_user.mention} ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <b>ᴛʀᴀᴄᴋ ɪɴғᴏ</b>.\n\n<b>ᴜsᴇʀ ɪᴅ :</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ :</b> @{message.from_user.username}",
                 )
     else:
-        # 🌸 Added animated start effect here
         out = private_panel(_)
         baby = await message.reply_text("**__ᴅɪηɢ ᴅᴏηɢ.🥀__**")
 
+        # Animated sequence safely handled
         for dots in [".", "..", "...", "....", "....."]:
-            await baby.edit_text(f"**__ᴅɪηɢ ᴅᴏηɢ{dots}🥀__**")
+            try:
+                await baby.edit_text(f"**__ᴅɪηɢ ᴅᴏηɢ{dots}🥀__**")
+            except MessageNotModified:
+                pass
             await asyncio.sleep(0.3)
 
         for dots in [".", "..", "...", "....", "....."]:
-            await baby.edit_text(f"**__sᴛᴧʀᴛɪηɢ{dots}❤️‍🔥__**")
+            try:
+                await baby.edit_text(f"**__sᴛᴧʀᴛɪηɢ{dots}❤️‍🔥__**")
+            except MessageNotModified:
+                pass
             await asyncio.sleep(0.3)
 
         for dots in [".", "..", "...", "....", "....."]:
-            await baby.edit_text(f"**__ʙσᴛ sᴛᴧʀᴛєᴅ{dots}💤__**")
+            try:
+                await baby.edit_text(f"**__ʙσᴛ sᴛᴧʀᴛєᴅ{dots}💤__**")
+            except MessageNotModified:
+                pass
             await asyncio.sleep(0.3)
 
         await baby.delete()
@@ -131,7 +142,6 @@ async def start_pm(client, message: Message, _):
                 text=f"{message.from_user.mention} sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ.\n\n<b>ID:</b> <code>{message.from_user.id}</code>\n<b>ᴜsᴇʀɴᴀᴍᴇ:</b> @{message.from_user.username}",
             )
 
-
 #--------------------------#
 
 @app.on_message(filters.command(["start"]) & filters.group & ~config.BANNED_USERS)
@@ -145,7 +155,6 @@ async def start_gp(client, message: Message, _):
         reply_markup=InlineKeyboardMarkup(out),
     )
     await add_served_chat(message.chat.id)
-
 
 #--------------------------#
 
