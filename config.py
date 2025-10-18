@@ -46,7 +46,7 @@ VIDEO_API_URL = getenv("VIDEO_API_URL", 'https://api.video.thequickearn.xyz')
 API_KEY = getenv("API_KEY", 'NxGBNexGenBots4e1026') # youtube song api key
 UPSTREAM_REPO = getenv(
     "UPSTREAM_REPO",
-    "https://github.com/ixastamusicbot/ASTA_MUSIC",
+    "https://github.com/laiba-music/Laiba_music",
 )
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
 GIT_TOKEN = getenv(
@@ -127,4 +127,4 @@ if SUPPORT_CHAT:
     if not re.match("(?:http|https)://", SUPPORT_CHAT):
         raise SystemExit(
             "[ERROR] - Your SUPPORT_CHAT url is wrong. Please ensure that it starts with https://"
-        )
+    )
